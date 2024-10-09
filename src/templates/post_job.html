@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Post a New Job</h2>
+<form method="POST">
+    <div class="mb-3">
+        <label for="title" class="form-label">Job Title</label>
+        <input type="text" class="form-control" id="title" name="title" required>
+    </div>
+    <div class="mb-3">
+        <label for="location" class="form-label">Location</label>
+        <input type="text" class="form-control" id="location" name="location" required>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Job Description</label>
+        <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="requirements" class="form-label">Requirements</label>
+        <textarea class="form-control" id="requirements" name="requirements" rows="3" required></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="salary_range" class="form-label">Salary Range</label>
+        <input type="text" class="form-control" id="salary_range" name="salary_range">
+    </div>
+    <button type="submit" class="btn btn-primary">Post Job</button>
+</form>
+{% endblock %}

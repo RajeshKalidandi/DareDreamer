@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Dare Dreamer Job Search{% endblock %}
+{% block content %}
+<h1>Your Job Search Dashboard</h1>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Application Statistics</h5>
+                <p>Total Applications: {{ total_applications }}</p>
+                <ul>
+                    {% for status, count in application_stats.items() %}
+                    <li>{{ status }}: {{ count }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Recent Job Matches</h5>
+                <ul class="list-group">
+                    {% for job in recent_matches %}
+                    <li class="list-group-item">
+                        <a href="{{ url_for('job_details', job_id=job.id) }}">{{ job.title }}</a> at {{ job.company }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Upcoming Interviews</h5>
+                {% if upcoming_interviews %}
+                <ul class="list-group">
+                    {% for application in upcoming_interviews %}
+                    <li class="list-group-item">
+                        {{ application.job.title }} at {{ application.job.company }} - 
+                        Applied on: {{ application.applied_date.strftime('%Y-%m-%d') }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No upcoming interviews scheduled.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Job Recommendations</h5>
+                <p>Based on your application history, we recommend the following jobs:</p>
+                <ul class="list-group">
+                    {% for job in similar_jobs[:3] %}
+                    <li class="list-group-item">
+                        <a href="{{ url_for('job_details', job_id=job.id) }}">{{ job.title }}</a> at {{ job.company }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                <a href="{{ url_for('recommendations') }}" class="btn btn-primary mt-3">View All Recommendations</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Applications for {{ job.title }}</h2>
+{% if applications %}
+    <ul class="list-group">
+    {% for application in applications %}
+        <li class="list-group-item">
+            <h5>{{ application.applicant.full_name }}</h5>
+            <p>Applied on: {{ application.applied_date.strftime('%Y-%m-%d') }}</p>
+            <p>Status: {{ application.status }}</p>
+            <a href="{{ url_for('profile', user_id=application.applicant.id) }}" class="btn btn-primary">View Profile</a>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No applications received for this job yet.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Your Profile</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="full_name" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="full_name" name="full_name" value="{{ current_user.full_name or '' }}">
+        </div>
+        <div class="mb-3">
+            <label for="headline" class="form-label">Professional Headline</label>
+            <input type="text" class="form-control" id="headline" name="headline" value="{{ current_user.headline or '' }}">
+        </div>
+        <div class="mb-3">
+            <label for="summary" class="form-label">Professional Summary</label>
+            <textarea class="form-control" id="summary" name="summary" rows="3">{{ current_user.summary or '' }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="skills" class="form-label">Skills (comma-separated)</label>
+            <input type="text" class="form-control" id="skills" name="skills" value="{{ current_user.skills or '' }}">
+        </div>
+        <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" class="form-control" id="location" name="location" value="{{ current_user.location or '' }}">
+        </div>
+        <div class="mb-3">
+            <label for="desired_job_title" class="form-label">Desired Job Title</label>
+            <input type="text" class="form-control" id="desired_job_title" name="desired_job_title" value="{{ current_user.desired_job_title or '' }}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Work Experience</label>
+            <div id="experience-fields">
+                {% if current_user.experience %}
+                    {% for exp in current_user.experience|tojson|safe|json_loads %}
+                        <div class="experience-entry mb-2">
+                            <input type="text" class="form-control mb-1" name="experience_title" value="{{ exp.title }}" placeholder="Job Title">
+                            <input type="text" class="form-control mb-1" name="experience_company" value="{{ exp.company }}" placeholder="Company">
+                            <textarea class="form-control mb-1" name="experience_description" placeholder="Description">{{ exp.description }}</textarea>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" id="add-experience">Add Experience</button>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Education</label>
+            <div id="education-fields">
+                {% if current_user.education %}
+                    {% for edu in current_user.education|tojson|safe|json_loads %}
+                        <div class="education-entry mb-2">
+                            <input type="text" class="form-control mb-1" name="education_degree" value="{{ edu.degree }}" placeholder="Degree">
+                            <input type="text" class="form-control mb-1" name="education_institution" value="{{ edu.institution }}" placeholder="Institution">
+                            <input type="text" class="form-control mb-1" name="education_field" value="{{ edu.field_of_study }}" placeholder="Field of Study">
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" id="add-education">Add Education</button>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+    </form>
+
+    <h3 class="mt-4">Job Matches</h3>
+    <div id="job-matches"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addExperience = document.getElementById('add-experience');
+            const experienceFields = document.getElementById('experience-fields');
+            addExperience.addEventListener('click', function() {
+                const newField = document.createElement('div');
+                newField.className = 'experience-entry mb-2';
+                newField.innerHTML = `
+                    <input type="text" class="form-control mb-1" name="experience_title" placeholder="Job Title">
+                    <input type="text" class="form-control mb-1" name="experience_company" placeholder="Company">
+                    <textarea class="form-control mb-1" name="experience_description" placeholder="Description"></textarea>
+                `;
+                experienceFields.appendChild(newField);
+            });
+
+            const addEducation = document.getElementById('add-education');
+            const educationFields = document.getElementById('education-fields');
+            addEducation.addEventListener('click', function() {
+                const newField = document.createElement('div');
+                newField.className = 'education-entry mb-2';
+                newField.innerHTML = `
+                    <input type="text" class="form-control mb-1" name="education_degree" placeholder="Degree">
+                    <input type="text" class="form-control mb-1" name="education_institution" placeholder="Institution">
+                    <input type="text" class="form-control mb-1" name="education_field" placeholder="Field of Study">
+                `;
+                educationFields.appendChild(newField);
+            });
+
+            fetch('/search', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    const matchesDiv = document.getElementById('job-matches');
+                    matchesDiv.innerHTML = data.map(job => `
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <h5 class="card-title">${job.title}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">${job.company}</h6>
+                                <p class="card-text">${job.location} | ${job.salary_range || 'Salary not specified'}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                });
+        });
+    </script>
+{% endblock %}

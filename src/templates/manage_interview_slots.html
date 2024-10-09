@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Manage Interview Slots for {{ job.title }}</h2>
+<form method="POST">
+    <div class="mb-3">
+        <label for="start_time" class="form-label">Interview Start Time</label>
+        <input type="datetime-local" class="form-control" id="start_time" name="start_time" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Interview Slot</button>
+</form>
+
+<h3 class="mt-4">Existing Interview Slots</h3>
+{% if interview_slots %}
+    <ul class="list-group">
+    {% for slot in interview_slots %}
+        <li class="list-group-item">
+            {{ slot.start_time.strftime('%Y-%m-%d %H:%M') }} - {{ slot.end_time.strftime('%H:%M') }}
+            {% if slot.is_available %}
+                <span class="badge bg-success">Available</span>
+            {% else %}
+                <span class="badge bg-danger">Booked</span>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No interview slots available.</p>
+{% endif %}
+{% endblock %}

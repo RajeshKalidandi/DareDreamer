@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Job Recommendations - Dare Dreamer Job Search{% endblock %}
+{% block content %}
+<h1>Job Recommendations</h1>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Recommended Jobs Based on Your Application History</h5>
+                {% if similar_jobs %}
+                <ul class="list-group">
+                    {% for job in similar_jobs %}
+                    <li class="list-group-item">
+                        <h6><a href="{{ url_for('job_details', job_id=job.id) }}">{{ job.title }}</a></h6>
+                        <p class="mb-1">{{ job.company }} - {{ job.location }}</p>
+                        <p class="mb-1">{{ job.description[:200] }}...</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No recommendations available. Try applying to more jobs to get personalized recommendations.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

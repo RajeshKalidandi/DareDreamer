@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Job Search Results</h2>
+    {% if matches %}
+        <ul class="list-group">
+        {% for match in matches %}
+            <li class="list-group-item">
+                <h5>{{ match.title }}</h5>
+                <p>Company: {{ match.company }}</p>
+                <p>Location: {{ match.location }}</p>
+                <a href="{{ match.url }}" target="_blank" class="btn btn-sm btn-primary">View Job</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No matching jobs found.</p>
+    {% endif %}
+{% endblock %}

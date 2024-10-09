@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Your Job Applications</h2>
+    {% if applications %}
+        <ul class="list-group">
+        {% for application in applications %}
+            <li class="list-group-item">
+                <h5>{{ application.job.title }} at {{ application.job.company }}</h5>
+                <p>Applied on: {{ application.applied_date.strftime('%Y-%m-%d') }}</p>
+                <p>Status: {{ application.status }}</p>
+                {% if application.status == 'Applied' %}
+                    <a href="{{ url_for('schedule_interview', application_id=application.id) }}" class="btn btn-primary">Schedule Interview</a>
+                {% elif application.status == 'Interviewing' and application.interview_slot %}
+                    <p>Interview scheduled for: {{ application.interview_slot.start_time.strftime('%Y-%m-%d %H:%M') }}</p>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>You haven't applied to any jobs yet.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Schedule Interview for {{ application.job.title }}</h2>
+{% if available_slots %}
+    <form method="POST">
+        <div class="mb-3">
+            <label for="slot_id" class="form-label">Choose an Interview Slot</label>
+            <select class="form-select" id="slot_id" name="slot_id" required>
+                {% for slot in available_slots %}
+                    <option value="{{ slot.id }}">{{ slot.start_time.strftime('%Y-%m-%d %H:%M') }} - {{ slot.end_time.strftime('%H:%M') }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Schedule Interview</button>
+    </form>
+{% else %}
+    <p>No available interview slots. Please check back later or contact the employer.</p>
+{% endif %}
+{% endblock %}

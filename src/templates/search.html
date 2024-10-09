@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Job Search</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label for="query">Search Query</label>
+            <textarea class="form-control" id="query" name="query" rows="3">{{ current_user.profile }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Search Jobs</button>
+    </form>
+{% endblock %}

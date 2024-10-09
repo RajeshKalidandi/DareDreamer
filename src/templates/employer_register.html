@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Register as an Employer</h2>
+<form method="POST">
+    <div class="mb-3">
+        <label for="company_name" class="form-label">Company Name</label>
+        <input type="text" class="form-control" id="company_name" name="company_name" required>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Company Description</label>
+        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="website" class="form-label">Company Website</label>
+        <input type="url" class="form-control" id="website" name="website">
+    </div>
+    <button type="submit" class="btn btn-primary">Register as Employer</button>
+</form>
+{% endblock %}

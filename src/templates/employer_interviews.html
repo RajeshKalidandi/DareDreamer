@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Upcoming Interviews</h2>
+{% if interviews %}
+    <ul class="list-group">
+    {% for interview in interviews %}
+        <li class="list-group-item">
+            <h5>{{ interview.job.title }}</h5>
+            <p>Applicant: {{ interview.applicant.full_name }}</p>
+            <p>Interview Time: {{ interview.interview_slot.start_time.strftime('%Y-%m-%d %H:%M') }} - {{ interview.interview_slot.end_time.strftime('%H:%M') }}</p>
+            <a href="{{ url_for('view_applications', job_id=interview.job.id) }}" class="btn btn-primary">View Application</a>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No upcoming interviews scheduled.</p>
+{% endif %}
+{% endblock %}
