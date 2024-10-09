@@ -1,4 +1,4 @@
-from . import db
+from .database import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -57,12 +57,14 @@ class Job(db.Model):
     title = db.Column(db.String(200), nullable=False)
     company = db.Column(db.String(100), nullable=False)
     location = db.Column(db.String(100))
-    description = db.Column(db.Text)
-    requirements = db.Column(db.Text)
-    salary_range = db.Column(db.String(50))
-    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
     url = db.Column(db.String(500))
-    employer_id = db.Column(db.Integer, db.ForeignKey('employer.id'), nullable=False)
+    description = db.Column(db.Text)
+    salary = db.Column(db.String(50))
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    job_type = db.Column(db.String(50))
+    experience_level = db.Column(db.String(50))
+    employer_id = db.Column(db.Integer, db.ForeignKey('employer.id'), nullable=True)
+    source = db.Column(db.String(50))  # Add this line
 
     applications = db.relationship('Application', backref='job', lazy=True)
 

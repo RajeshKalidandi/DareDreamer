@@ -3,8 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from .config import Config
+from .database import db
+from dotenv import load_dotenv
 
-db = SQLAlchemy()
+load_dotenv()  # Add this line to load environment variables
+
 migrate = Migrate()
 login_manager = LoginManager()
 
@@ -17,15 +20,13 @@ def create_app(config_class=Config):
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'
 
-    with app.app_context():
-        from .models import User
-        db.create_all()
+    from .models import User
 
-        @login_manager.user_loader
-        def load_user(user_id):
-            return User.query.get(int(user_id))
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
-        from .routes import bp
-        app.register_blueprint(bp)
+    from .routes import bp
+    app.register_blueprint(bp)
 
     return app

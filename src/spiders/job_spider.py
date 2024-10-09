@@ -3,6 +3,7 @@ from scrapy.loader import ItemLoader
 from scrapy.loader.processors import TakeFirst, MapCompose
 from w3lib.html import remove_tags
 from src.database import create_connection, insert_job
+from datetime import datetime
 
 class JobItem(scrapy.Item):
     title = scrapy.Field()
@@ -12,6 +13,8 @@ class JobItem(scrapy.Item):
     description = scrapy.Field()
     salary = scrapy.Field()
     date_posted = scrapy.Field()
+    job_type = scrapy.Field()
+    experience_level = scrapy.Field()
 
 class JobSpider(scrapy.Spider):
     name = "jobs"
@@ -42,8 +45,18 @@ class JobSpider(scrapy.Spider):
             loader.add_css('url', 'a.base-card__full-link::attr(href)')
             loader.add_css('description', 'p.base-search-card__metadata::text', MapCompose(remove_tags, str.strip))
             loader.add_css('date_posted', 'time::attr(datetime)')
+            
+            # New fields
+            loader.add_css('job_type', 'span.job-search-card__job-type::text', MapCompose(str.strip))
+            loader.add_css('salary', 'span.job-search-card__salary-info::text', MapCompose(str.strip))
+            loader.add_css('experience_level', 'span.job-search-card__experience-level::text', MapCompose(str.strip))
 
             job_item = loader.load_item()
+            
+            # Convert date_posted to datetime object
+            if 'date_posted' in job_item:
+                job_item['date_posted'] = datetime.strptime(job_item['date_posted'], '%Y-%m-%d')
+
             yield job_item
 
             # Insert job into database

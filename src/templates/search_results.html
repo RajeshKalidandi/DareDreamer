@@ -1,18 +1,116 @@
 {% extends "base.html" %}
 {% block content %}
-    <h2>Job Search Results</h2>
-    {% if matches %}
-        <ul class="list-group">
-        {% for match in matches %}
-            <li class="list-group-item">
-                <h5>{{ match.title }}</h5>
-                <p>Company: {{ match.company }}</p>
-                <p>Location: {{ match.location }}</p>
-                <a href="{{ match.url }}" target="_blank" class="btn btn-sm btn-primary">View Job</a>
-            </li>
+    <h2>Search Results</h2>
+    {% if jobs %}
+        <p>Found {{ jobs|length }} job(s)</p>
+        <div class="job-list">
+        {% for job in jobs %}
+            <div class="job-card mb-4">
+                <h3 class="job-title">
+                    <a href="{{ job.url }}" target="_blank" rel="noopener noreferrer">{{ job.title }}</a>
+                </h3>
+                <h4 class="company-name">{{ job.company }}</h4>
+                <p class="job-details">
+                    <span class="location"><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
+                    {% if job.job_type %}
+                        <span class="job-type"><i class="fas fa-briefcase"></i> {{ job.job_type }}</span>
+                    {% endif %}
+                    {% if job.experience_level %}
+                        <span class="experience-level"><i class="fas fa-user-graduate"></i> {{ job.experience_level }}</span>
+                    {% endif %}
+                </p>
+                {% if job.salary %}
+                    <p class="salary"><i class="fas fa-money-bill-wave"></i> {{ job.salary }}</p>
+                {% endif %}
+                <p class="posted-date"><i class="far fa-calendar-alt"></i> Posted: {{ job.date_posted.strftime('%Y-%m-%d') }}</p>
+                {% if job.description %}
+                    <p class="job-description">{{ job.description|truncate(200) }}</p>
+                {% endif %}
+                <div class="job-actions">
+                    <a href="{{ url_for('main.job_details', job_id=job.id) }}" class="btn btn-primary btn-sm">View Details</a>
+                    <a href="{{ job.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-sm">Apply on {{ job.source }}</a>
+                </div>
+            </div>
         {% endfor %}
-        </ul>
+        </div>
     {% else %}
-        <p>No matching jobs found.</p>
+        <p>No jobs found matching your search criteria.</p>
+        <h3>Try searching on popular job portals:</h3>
+        <div class="row mt-4">
+            <div class="col-md-3 mb-3">
+                <a href="{{ url_for('main.scrape_specific_jobs', source='linkedin') }}" class="btn btn-outline-primary btn-lg btn-block d-flex align-items-center justify-content-center">
+                    <img src="{{ url_for('static', filename='img/linkedin_icon.png') }}" alt="LinkedIn" width="30" height="30" class="me-2">
+                    LinkedIn
+                </a>
+            </div>
+            <div class="col-md-3 mb-3">
+                <a href="{{ url_for('main.scrape_specific_jobs', source='naukri') }}" class="btn btn-outline-primary btn-lg btn-block d-flex align-items-center justify-content-center">
+                    <img src="{{ url_for('static', filename='img/naukri_icon.png') }}" alt="Naukri" width="30" height="30" class="me-2">
+                    Naukri
+                </a>
+            </div>
+            <div class="col-md-3 mb-3">
+                <a href="{{ url_for('main.scrape_specific_jobs', source='glassdoor') }}" class="btn btn-outline-primary btn-lg btn-block d-flex align-items-center justify-content-center">
+                    <img src="{{ url_for('static', filename='img/glassdoor_icon.png') }}" alt="Glassdoor" width="30" height="30" class="me-2">
+                    Glassdoor
+                </a>
+            </div>
+            <div class="col-md-3 mb-3">
+                <a href="{{ url_for('main.scrape_specific_jobs', source='wellfound') }}" class="btn btn-outline-primary btn-lg btn-block d-flex align-items-center justify-content-center">
+                    <img src="{{ url_for('static', filename='img/wellfound_icon.png') }}" alt="Wellfound" width="30" height="30" class="me-2">
+                    Wellfound
+                </a>
+            </div>
+        </div>
     {% endif %}
+    <a href="{{ url_for('main.search') }}" class="btn btn-secondary mt-3">New Search</a>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .job-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: box-shadow 0.3s ease;
+    }
+    .job-card:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .job-title {
+        margin-bottom: 10px;
+    }
+    .job-title a {
+        color: #1a73e8;
+        text-decoration: none;
+    }
+    .job-title a:hover {
+        text-decoration: underline;
+    }
+    .company-name {
+        color: #5f6368;
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
+    .job-details span {
+        margin-right: 15px;
+        color: #5f6368;
+    }
+    .salary {
+        font-weight: bold;
+        color: #0d652d;
+    }
+    .posted-date {
+        color: #5f6368;
+        font-size: 0.9em;
+    }
+    .job-description {
+        margin-top: 10px;
+        color: #3c4043;
+    }
+    .job-actions {
+        margin-top: 15px;
+    }
+</style>
 {% endblock %}

@@ -60,3 +60,7 @@ Werkzeug==3.0.4
 zope.interface==7.0.3
 PyPDF2==1.26.0
 python-docx==0.8.11
+Flask-Login==0.6.3
+Flask-Migrate==3.1.0
+Scrapy==2.11.2
+python-dotenv==1.0.1

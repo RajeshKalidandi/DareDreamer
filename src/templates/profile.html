@@ -60,11 +60,11 @@
                 <div class="card-body">
                     <h5 class="card-title">Work Experience</h5>
                     {% if current_user.experience %}
-                        {% for exp in current_user.experience %}
+                        {% for exp in current_user.get_experience() %}
                             <div class="mb-3">
-                                <h6>{{ exp.title }} at {{ exp.company }}</h6>
-                                <p class="text-muted">{{ exp.dates }}</p>
-                                <p>{{ exp.description }}</p>
+                                <h6>{{ exp.get('title', '') }} at {{ exp.get('company', '') }}</h6>
+                                <p class="text-muted">{{ exp.get('dates', '') }}</p>
+                                <p>{{ exp.get('description', '') }}</p>
                             </div>
                             {% if not loop.last %}<hr>{% endif %}
                         {% endfor %}
@@ -80,11 +80,11 @@
                 <div class="card-body">
                     <h5 class="card-title">Education</h5>
                     {% if current_user.education %}
-                        {% for edu in current_user.education %}
+                        {% for edu in current_user.get_education() %}
                             <div class="mb-3">
-                                <h6>{{ edu.degree }} from {{ edu.institution }}</h6>
-                                <p class="text-muted">{{ edu.graduation_date }}</p>
-                                {% if edu.field_of_study %}<p>Field of Study: {{ edu.field_of_study }}</p>{% endif %}
+                                <h6>{{ edu.get('degree', '') }} from {{ edu.get('institution', '') }}</h6>
+                                <p class="text-muted">{{ edu.get('graduation_date', '') }}</p>
+                                {% if edu.get('field_of_study') %}<p>Field of Study: {{ edu.get('field_of_study') }}</p>{% endif %}
                             </div>
                             {% if not loop.last %}<hr>{% endif %}
                         {% endfor %}
