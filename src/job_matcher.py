@@ -3,7 +3,7 @@ from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import json
-from src.database import create_connection, get_all_jobs
+from .models import Job  # Import Job model
 import logging
 
 # Set up logging
@@ -44,46 +44,14 @@ class JobMatcher:
         top_indices = similarities.argsort()[0][-top_n:][::-1]
         return [self.jobs[i] for i in top_indices]
 
-    def get_similar_jobs(self, job_ids, top_n=5):
-        if not self.jobs or not self.job_vectors:
-            return []
+def get_recent_matches(user, limit=5):
+    # Implement logic to get recent job matches for the user
+    # For now, return an empty list
+    return []
 
-        applied_jobs = [job for job in self.jobs if job['id'] in job_ids]
-        applied_job_texts = [self.preprocess_job(job) for job in applied_jobs]
-        applied_vectors = self.vectorizer.transform(applied_job_texts)
+def get_job_recommendations(user, limit=3):
+    # Implement logic to get job recommendations for the user
+    # For now, return an empty list
+    return []
 
-        avg_vector = applied_vectors.mean(axis=0)
-        similarities = cosine_similarity(avg_vector, self.job_vectors)
-        top_indices = similarities.argsort()[0][-top_n-len(job_ids):][::-1]
-        
-        similar_jobs = [self.jobs[i] for i in top_indices if self.jobs[i]['id'] not in job_ids]
-        return similar_jobs[:top_n]
-
-def load_jobs_from_db():
-    conn = create_connection()
-    if conn is not None:
-        jobs = get_all_jobs(conn)
-        conn.close()
-        return [dict(zip(['id', 'title', 'company', 'location', 'url', 'description', 'salary', 'date_posted', 'date_scraped'], job)) for job in jobs]
-    else:
-        logger.error("Unable to connect to the database")
-        return []
-
-if __name__ == "__main__":
-    # Load jobs from the database
-    jobs = load_jobs_from_db()
-
-    if jobs:
-        # Initialize and fit the job matcher
-        matcher = JobMatcher()
-        matcher.fit(jobs)
-
-        # Example usage
-        user_profile = "Experienced Python developer with machine learning skills"
-        matches = matcher.get_matches(user_profile)
-        
-        print(f"Top matches for the user profile '{user_profile}':")
-        for i, match in enumerate(matches, 1):
-            print(f"{i}. {match['title']} at {match['company']} - {match['location']}")
-    else:
-        print("No jobs available for matching. Please run the job spider first to populate the database.")
+# Remove the if __name__ == "__main__" block as it's not needed here

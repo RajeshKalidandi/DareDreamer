@@ -1,9 +1,8 @@
-from flask_sqlalchemy import SQLAlchemy
+from . import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-
-db = SQLAlchemy()
+import json
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -20,6 +19,7 @@ class User(UserMixin, db.Model):
     education = db.Column(db.Text)  # JSON string of education history
     location = db.Column(db.String(100))
     desired_job_title = db.Column(db.String(100))
+    phone = db.Column(db.String(20))
 
     # Relationship with applications
     applications = db.relationship('Application', backref='applicant', lazy=True)
@@ -29,6 +29,18 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def set_experience(self, experience_list):
+        self.experience = json.dumps(experience_list)
+
+    def get_experience(self):
+        return json.loads(self.experience) if self.experience else []
+
+    def set_education(self, education_list):
+        self.education = json.dumps(education_list)
+
+    def get_education(self):
+        return json.loads(self.education) if self.education else []
 
 class Employer(db.Model):
     id = db.Column(db.Integer, primary_key=True)

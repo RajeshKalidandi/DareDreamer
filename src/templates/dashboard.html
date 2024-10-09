@@ -21,13 +21,17 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Recent Job Matches</h5>
+                {% if recent_matches %}
                 <ul class="list-group">
                     {% for job in recent_matches %}
                     <li class="list-group-item">
-                        <a href="{{ url_for('job_details', job_id=job.id) }}">{{ job.title }}</a> at {{ job.company }}
+                        <a href="{{ url_for('main.job_details', job_id=job.id) }}">{{ job.title }}</a> at {{ job.company }}
                     </li>
                     {% endfor %}
                 </ul>
+                {% else %}
+                <p>No recent matches found.</p>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -60,15 +64,19 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Job Recommendations</h5>
+                {% if similar_jobs %}
                 <p>Based on your application history, we recommend the following jobs:</p>
                 <ul class="list-group">
                     {% for job in similar_jobs[:3] %}
                     <li class="list-group-item">
-                        <a href="{{ url_for('job_details', job_id=job.id) }}">{{ job.title }}</a> at {{ job.company }}
+                        <a href="{{ url_for('main.job_details', job_id=job.id) }}">{{ job.title }}</a> at {{ job.company }}
                     </li>
                     {% endfor %}
                 </ul>
-                <a href="{{ url_for('recommendations') }}" class="btn btn-primary mt-3">View All Recommendations</a>
+                <a href="{{ url_for('main.recommendations') }}" class="btn btn-primary mt-3">View All Recommendations</a>
+                {% else %}
+                <p>No recommendations available at this time.</p>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -7,6 +7,10 @@ from flask import current_app
 
 from alembic import context
 
+# Add these lines
+from src import create_app, db
+app = create_app()
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config

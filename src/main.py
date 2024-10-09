@@ -1,7 +1,7 @@
-from src.app import create_app, db
-from src.models import User, Job, Application, Employer, InterviewSlot
-from src.spiders.job_spider import JobSpider
-from src.job_matcher import JobMatcher, load_jobs_from_db
+from .app import create_app, db
+from .models import User, Job, Application, Employer, InterviewSlot
+from .spiders.job_spider import JobSpider
+from .job_matcher import JobMatcher, load_jobs_from_db
 import logging
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
